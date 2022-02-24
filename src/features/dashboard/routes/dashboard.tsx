@@ -17,9 +17,7 @@ export const Dashboard = () => {
     <div>
       <h1>Dashboard</h1>
       <div>
-        <div>
-          <h3>Sidebar</h3>
-        </div>
+        <div>{/* <h3>Sidebar</h3> */}</div>
         <div>
           <Tree>{renderNode(data)}</Tree>
         </div>
