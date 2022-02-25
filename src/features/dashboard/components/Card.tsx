@@ -19,6 +19,7 @@ export const Card = ({ data, isActive }: { data: any; isActive?: boolean }) => {
           width: 250px;
           margin: auto;
           overflow: hidden;
+          background: white;
         }
         .styled-node.active {
           border: 3px solid #2ecc71;

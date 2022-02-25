@@ -1,6 +1,7 @@
 import { TreeNode, Tree } from "src/components/OrgTree";
 import { useEffect, useState } from "react";
 import { Layout } from "src/components/Layout";
+import Head from 'next/head'
 
 import { getEmployee } from "../api/getEmployee";
 import { Card } from "../components/Card";
@@ -36,6 +37,10 @@ export const Dashboard = () => {
   };
   return (
     <Layout>
+      <Head>
+        <title>Dashboard</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <div className="dashboard-container">
         <div className="section-one">
           <input
