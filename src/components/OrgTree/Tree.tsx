@@ -32,7 +32,7 @@ export interface TreeProps {
 export function Tree({
   children,
   lineHeight = "20px",
-  lineWidth = "1px",
+  lineWidth = "3px",
   lineColor = "black",
   nodePadding = "5px",
   lineBorderRadius = "5px",

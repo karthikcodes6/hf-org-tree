@@ -1,6 +1,27 @@
 import { TreeNode, Tree } from "src/components/OrgTree";
+import { useEffect, useState } from "react";
+import { Layout } from "src/components/Layout";
+
+import { getEmployee } from "../api/getEmployee";
+import { Card } from "../components/Card";
 
 export const Dashboard = () => {
+  const [data, setData] = useState({});
+  const [search, setSearch] = useState("");
+
+  async function fetchEmployee() {
+    const employee = await getEmployee();
+    setData(employee);
+  }
+
+  useEffect(() => {
+    fetchEmployee();
+  }, []);
+
+  const handleChange = (e) => {
+    setSearch(e.target.value);
+  };
+
   const renderNode = (node) => {
     if (node.children) {
       return (
@@ -13,129 +34,52 @@ export const Dashboard = () => {
     }
   };
 
+  const handleGotoSearch = () => {
+    const id = getId(data, search);
+    if (id) {
+      document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <div>
-        <div>{/* <h3>Sidebar</h3> */}</div>
-        <div>
-          <Tree>{renderNode(data)}</Tree>
-        </div>
+    <Layout>
+      <div className="dashboard-container">
+        <input
+          value={search}
+          onChange={handleChange}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleGotoSearch();
+            }
+          }}
+        />
+        <button onClick={handleGotoSearch}>Go</button>
+        <Tree>{renderNode(data)}</Tree>
       </div>
-    </div>
+      <style jsx>{`
+        .dashboard-container {
+          padding: 20px;
+        }
+      `}</style>
+    </Layout>
   );
+};
+
+const getId = (node, name) => {
+  let foundNode = null;
+  const findNode = (node) => {
+    if (node.name.toLowerCase().startsWith(name?.toLowerCase() || "")) {
+      foundNode = node;
+    } else if (node.children) {
+      node.children.forEach((child) => {
+        findNode(child);
+      });
+    }
+  };
+  findNode(node);
+  return foundNode?.id || null;
 };
 
 function renderCard(data) {
-  return (
-    <div className="styled-node">
-      <img src={data.image} />
-      <div className="right-container">
-        <p>{data.name}</p>
-        <p>{data.designation}</p>
-        <p>{data.contact}</p>
-      </div>
-      <style jsx>{`
-        .styled-node {
-          display: flex;
-          border: 1px solid #000;
-          max-width: 200px;
-          margin: auto;
-        }
-        .styled-node img {
-          max-width: 30%;
-          object-fit: cover;
-        }
-        .right-container {
-          padding: 5px;
-          text-align: left;
-          margin-left: 20px;
-        }
-        .right-container p {
-          font-size: 10px;
-          margin: 0;
-        }
-      `}</style>
-    </div>
-  );
+  return <Card data={data} />;
 }
-
-const data = {
-  name: "Root",
-  designation: "CEO",
-  image:
-    "https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo=",
-  contact: "hello@mail.com",
-  children: [
-    {
-      name: "Child 1",
-      designation: "CEO",
-      contact: "hello@mail.com",
-      image:
-        "https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo=",
-      children: [
-        {
-          name: "Grand Child",
-          designation: "CEO",
-          image:
-            "https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo=",
-        },
-      ],
-    },
-    {
-      name: "Child 2",
-      contact: "hello@mail.com",
-      designation: "CEO",
-      image:
-        "https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo=",
-      children: [
-        {
-          name: "Grand Child",
-          designation: "CEO",
-          contact: "hello@mail.com",
-          image:
-            "https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo=",
-          children: [
-            {
-              name: "Great Grand Child 1",
-              designation: "CEO",
-              contact: "hello@mail.com",
-              image:
-                "https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo=",
-            },
-            {
-              name: "Great Grand Child 2",
-              designation: "CEO",
-              contact: "hello@mail.com",
-              image:
-                "https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo=",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: "Child 3",
-      designation: "CEO",
-      contact: "hello@mail.com",
-      image:
-        "https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo=",
-      children: [
-        {
-          name: "Grand Child 1",
-          designation: "CEO",
-          contact: "hello@mail.com",
-          image:
-            "https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo=",
-        },
-        {
-          name: "Grand Child 2",
-          designation: "CEO",
-          contact: "hello@mail.com",
-          image:
-            "https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo=",
-        },
-      ],
-    },
-  ],
-};
