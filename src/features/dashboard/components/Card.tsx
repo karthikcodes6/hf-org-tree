@@ -1,6 +1,6 @@
-export const Card = ({ data }) => {
+export const Card = ({ data, isActive }: { data: any; isActive?: boolean }) => {
   return (
-    <div className="styled-node" id={data.id}>
+    <div className={`styled-node ${isActive ? "active" : ""}`} id={data.id}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={data.avatar} width="50px" height="50px" alt="employee avatar" />
       <div className="right-container">
@@ -19,6 +19,9 @@ export const Card = ({ data }) => {
           max-width: 250px;
           margin: auto;
           overflow: hidden;
+        }
+        .styled-node.active {
+          border: 3px solid #2ecc71;
         }
         .styled-node img {
           object-fit: cover;

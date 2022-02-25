@@ -4,10 +4,12 @@ import { Layout } from "src/components/Layout";
 
 import { getEmployee } from "../api/getEmployee";
 import { Card } from "../components/Card";
+import { getIdByName } from "../utils/getIdByName";
 
 export const Dashboard = () => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState<any>({});
   const [search, setSearch] = useState("");
+  const [activeEmployeeId, setActiveEmployeeId] = useState("");
 
   async function fetchEmployee() {
     const employee = await getEmployee();
@@ -19,28 +21,34 @@ export const Dashboard = () => {
   }, []);
 
   const handleChange = (e) => {
+    setActiveEmployeeId("");
     setSearch(e.target.value);
   };
 
   const renderNode = (node) => {
     if (node.children) {
       return (
-        <TreeNode data={node} renderNode={renderCard}>
+        <TreeNode data={node} renderNode={renderCard(node.id === activeEmployeeId)}>
           {node.children.map((child) => renderNode(child))}
         </TreeNode>
       );
     } else {
-      return <TreeNode data={node} renderNode={renderCard} />;
+      return <TreeNode data={node} renderNode={renderCard(data.id === activeEmployeeId)} />;
     }
   };
 
   const handleGotoSearch = () => {
-    const id = getId(data, search);
+    const id = getIdByName(data, search);
     if (id) {
-      document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+      setActiveEmployeeId(id);
+      document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+      setTimeout(() => {
+        setActiveEmployeeId("");
+      }, 2500);
+    } else {
+      setActiveEmployeeId("");
     }
   };
-
   return (
     <Layout>
       <div className="dashboard-container">
@@ -65,21 +73,8 @@ export const Dashboard = () => {
   );
 };
 
-const getId = (node, name) => {
-  let foundNode = null;
-  const findNode = (node) => {
-    if (node.name.toLowerCase().startsWith(name?.toLowerCase() || "")) {
-      foundNode = node;
-    } else if (node.children) {
-      node.children.forEach((child) => {
-        findNode(child);
-      });
-    }
+const renderCard = (isActive) => {
+  return function card(data) {
+    return <Card data={data} isActive={isActive} />;
   };
-  findNode(node);
-  return foundNode?.id || null;
 };
-
-function renderCard(data) {
-  return <Card data={data} />;
-}
