@@ -1,4 +1,4 @@
-export const getIdByName = (node, name) => {
+export const getIdByName = (node, name = "") => {
   let foundNode = null;
   const findNode = (node) => {
     if (node.name.toLowerCase().includes(name?.toLowerCase() || "")) {

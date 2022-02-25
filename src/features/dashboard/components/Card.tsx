@@ -6,7 +6,7 @@ export const Card = ({ data, isActive }: { data: any; isActive?: boolean }) => {
       <div className="right-container">
         <h6>{data.name}</h6>
         <p className="role">{data.role}</p>
-        <p>{data.email}</p>
+        <p>Contact: {data.email}</p>
       </div>
       <style jsx>{`
         .styled-node {
@@ -16,7 +16,7 @@ export const Card = ({ data, isActive }: { data: any; isActive?: boolean }) => {
           align-items: center;
           border-radius: 6px;
           padding: 10px;
-          max-width: 250px;
+          width: 250px;
           margin: auto;
           overflow: hidden;
         }
